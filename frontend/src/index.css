@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light Theme values (space-separated RGB channels) */
+  --color-slate-50: 15 23 42;      /* slate-900 (dark text) */
+  --color-slate-100: 15 23 42;     /* slate-900 (dark text) */
+  --color-slate-200: 15 23 42;     /* slate-900 (dark text) */
+  --color-slate-300: 30 41 59;     /* slate-800 (slightly lighter dark text) */
+  --color-slate-400: 71 85 105;    /* slate-600 (muted text) */
+  --color-slate-500: 100 116 139;  /* slate-500 (light muted text) */
+  --color-slate-600: 148 163 184;  /* slate-400 (borders / light placeholders) */
+  --color-slate-700: 203 213 225;  /* slate-300 (light borders) */
+  --color-slate-800: 226 232 240;  /* slate-200 (card borders) */
+  --color-slate-900: 255 255 255;  /* white (card background) */
+  --color-slate-950: 248 250 252;  /* slate-50 (page background) */
+
+  --color-primary-950: 228 232 240; /* soft light gray-blue for gradients */
+}
+
+.dark {
+  /* Dark Theme values (space-separated RGB channels) */
+  --color-slate-50: 248 250 252;    /* slate-50 (light text) */
+  --color-slate-100: 241 245 249;   /* slate-100 (light text) */
+  --color-slate-200: 226 232 240;   /* slate-200 (light text) */
+  --color-slate-300: 203 213 225;   /* slate-300 (slightly darker light text) */
+  --color-slate-400: 148 163 184;   /* slate-400 (muted text) */
+  --color-slate-500: 100 116 139;   /* slate-500 (medium text) */
+  --color-slate-600: 71 85 105;     /* slate-600 (darker muted text) */
+  --color-slate-700: 51 65 85;      /* slate-700 (dark borders / accents) */
+  --color-slate-800: 30 41 59;      /* slate-800 (card borders) */
+  --color-slate-900: 15 23 42;      /* slate-900 (card background) */
+  --color-slate-950: 2 6 23;        /* slate-950 (page background) */
+
+  --color-primary-950: 30 35 45;    /* primary-950 for gradients */
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased selection:bg-primary-500 selection:text-white transition-colors duration-300;
+  }
+
+  /* Custom premium scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-950 transition-colors duration-300;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+  }
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  @apply bg-slate-900/60 backdrop-blur-md border border-slate-800/80 transition-all duration-300;
+}
+
+.glass-card {
+  @apply bg-slate-900/40 backdrop-blur-sm border border-slate-800/50 hover:border-primary-500/30 transition-all duration-300;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(92, 117, 153, 0.15);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+/* Micro-animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Leaflet maps styling overrides */
+.leaflet-container {
+  @apply rounded-xl border border-slate-800 overflow-hidden;
+  font-family: inherit;
+}
+
+.leaflet-bar {
+  @apply border-none shadow-none !important;
+}
+
+.leaflet-bar a {
+  @apply bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-slate-100 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply bg-slate-900 text-slate-100 border border-slate-800 rounded-lg shadow-xl !important;
+}
+
+.leaflet-popup-tip {
+  @apply bg-slate-900 border-b border-r border-slate-800 !important;
+}
+
+/* Dark mode tiles filter */
+.dark .leaflet-tile-container {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+

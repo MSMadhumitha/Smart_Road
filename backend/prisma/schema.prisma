@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int                   @id @default(autoincrement())
+  name          String                @db.VarChar(100)
+  email         String                @unique @db.VarChar(150)
+  password      String                @db.VarChar(255)
+  role          Role                  @default(citizen)
+  phone         String?               @db.VarChar(20)
+  createdAt     DateTime              @default(now()) @map("created_at")
+  notifications Notification[]
+  statusHistory ReportStatusHistory[]
+  reports       Report[]
+
+  @@map("users")
+}
+
+model Report {
+  id            Int                   @id @default(autoincrement())
+  userId        Int                   @map("user_id")
+  imageUrl      String                @map("image_url") @db.Text
+  latitude      Decimal               @db.Decimal(10, 8)
+  longitude     Decimal               @db.Decimal(11, 8)
+  address       String?               @db.VarChar(255)
+  damageType    DamageType            @map("damage_type")
+  severity      Severity
+  priority      Priority
+  aiDescription String?               @map("ai_description") @db.Text
+  userNotes     String?               @map("user_notes") @db.Text
+  status        ReportStatus          @default(Pending)
+  adminRemarks  String?               @map("admin_remarks") @db.Text
+  resolvedAt    DateTime?             @map("resolved_at")
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
+  statusHistory ReportStatusHistory[]
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "reports_user_id_fkey")
+  @@map("reports")
+}
+
+model ReportStatusHistory {
+  id        Int      @id @default(autoincrement())
+  reportId  Int      @map("report_id")
+  oldStatus String?  @map("old_status") @db.VarChar(20)
+  newStatus String?  @map("new_status") @db.VarChar(20)
+  changedBy Int?     @map("changed_by")
+  remarks   String?  @db.Text
+  changedAt DateTime @default(now()) @map("changed_at")
+  user      User?    @relation(fields: [changedBy], references: [id])
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([changedBy], map: "report_status_history_changed_by_fkey")
+  @@index([reportId], map: "report_status_history_report_id_fkey")
+  @@map("report_status_history")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String   @db.VarChar(100)
+  message   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "notifications_user_id_fkey")
+  @@map("notifications")
+}
+
+enum Role {
+  citizen
+  admin
+}
+
+enum DamageType {
+  Pothole
+  Crack
+  Other
+}
+
+enum Severity {
+  Low
+  Medium
+  High
+}
+
+enum Priority {
+  Low
+  Medium
+  High
+}
+
+enum ReportStatus {
+  Pending
+  Inspected
+  In_Review   @map("In Review")
+  In_Progress @map("In Progress")
+  Resolved
+  Rejected
+}
+
