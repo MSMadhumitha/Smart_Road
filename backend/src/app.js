@@ -1,3 +1,4 @@
+import path from "path";
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -10,6 +11,9 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
+const uploadDir = process.env.UPLOAD_DIR || "./uploads";
+
+app.use("/uploads", express.static(path.resolve(uploadDir)));
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS
