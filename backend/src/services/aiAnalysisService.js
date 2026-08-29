@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const genAI = require('../config/gemini');
 
-const modelName = 'gemini-2.0-flash';
+const modelName = 'gemini-3.6-flash';
 
 // Helper to convert local file to Gemini inlineData structure
 function fileToGenerativePart(filePath, mimeType) {
@@ -40,7 +40,7 @@ const fallbackResult = {
 
 function getMockAnalysis(userNotes) {
   const notesLower = String(userNotes).toLowerCase();
-  
+
   if (notesLower.includes('crack') || notesLower.includes('line') || notesLower.includes('fracture')) {
     return {
       damage_type: 'Crack',
