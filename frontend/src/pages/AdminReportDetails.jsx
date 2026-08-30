@@ -328,7 +328,7 @@ const AdminReportDetails = () => {
           <div className="glass-panel rounded-2xl p-5 space-y-4">
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Visual Evidence</h3>
             <div className="space-y-3">
-              {report.imageUrl && report.imageUrl.split(',').map((url, idx) => (
+              {report.imageUrl && report.imageUrl.split(/,(?=data:|https?:|\/uploads|uploads)/).map((url, idx) => (
                 <div key={idx} className="rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-inner">
                   <img
                     src={url.startsWith('data:') || url.startsWith('http') ? url : `${backendBase}${url}`}

@@ -315,9 +315,12 @@ const ReportsList = () => {
                         <img
                           src={
                             report.imageUrl
-                              ? report.imageUrl.startsWith('data:') || report.imageUrl.startsWith('http')
-                                ? report.imageUrl.split(',')[0]
-                                : `${backendBase}${report.imageUrl.split(',')[0]}`
+                              ? (() => {
+                                  const first = report.imageUrl.split(/,(?=data:|https?:|\/uploads|uploads)/)[0];
+                                  return first.startsWith('data:') || first.startsWith('http')
+                                    ? first
+                                    : `${backendBase}${first}`;
+                                })()
                               : ''
                           }
                           alt="preview"

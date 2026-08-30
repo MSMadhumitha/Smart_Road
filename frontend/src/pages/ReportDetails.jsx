@@ -250,7 +250,7 @@ const ReportDetails = () => {
   // ============================================================
   const imageUrls = report.imageUrl
     ? report.imageUrl
-      .split(',')
+      .split(/,(?=data:|https?:|\/uploads|uploads)/)
       .map((url) => url.trim())
       .filter(Boolean)
     : [];
