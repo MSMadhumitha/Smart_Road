@@ -13,6 +13,9 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+// Trust reverse proxy (needed for rate limiting on hosting platforms like Render)
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 5000;
 
 // ==========================================

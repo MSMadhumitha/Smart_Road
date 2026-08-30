@@ -28,6 +28,10 @@ if (isSmtpConfigured) {
       user: SMTP_USER,
       pass: SMTP_PASS,
     },
+    // Force IPv4 lookup to prevent ENETUNREACH IPv6 errors in environments like Render
+    lookup: (hostname, options, callback) => {
+      dns.lookup(hostname, { ...options, family: 4 }, callback);
+    },
   });
   
   // Verify configuration connection
