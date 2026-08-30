@@ -83,7 +83,7 @@ const ReportsList = () => {
     setPage(1);
   };
 
-  const backendBase = 'http://localhost:5000';
+  const backendBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
 
   const getPriorityRowClass = (priority) => {
     switch (String(priority).toLowerCase()) {

@@ -22,7 +22,7 @@ const ReportDetails = () => {
   const [saveSuccess, setSaveSuccess] = useState('');
   const navigate = useNavigate();
 
-  const backendBase = 'http://localhost:5000';
+  const backendBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
 
   useEffect(() => {
     const fetchDetails = async () => {

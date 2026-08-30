@@ -38,7 +38,7 @@ const MyReports = () => {
   const pendingCount = reports.filter((r) => r.status === 'Pending').length;
   const resolvedCount = reports.filter((r) => r.status === 'Resolved').length;
 
-  const backendBase = 'http://localhost:5000'; // Fallback backend base URL
+  const backendBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, ''); // Dynamic backend base URL
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
