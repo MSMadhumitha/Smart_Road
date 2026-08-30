@@ -1,10 +1,17 @@
 const nodemailer = require('nodemailer');
 const dns = require('dns');
 
-// Force Node to prefer IPv4 DNS resolution (prevents ENETUNREACH IPv6 errors in environments like Render)
-if (typeof dns.setDefaultResultOrder === 'function') {
-  dns.setDefaultResultOrder('ipv4first');
-}
+// Globally override dns.lookup to force IPv4 (completely prevents connect ENETUNREACH IPv6 errors on Render)
+const originalLookup = dns.lookup;
+dns.lookup = function (hostname, options, callback) {
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  const opts = typeof options === 'number' ? { family: options } : { ...options };
+  opts.family = 4; // Force IPv4 only
+  return originalLookup.call(dns, hostname, opts, callback);
+};
 
 const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
