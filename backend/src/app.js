@@ -1,5 +1,5 @@
-import path from "path";
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -11,10 +11,13 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
-const uploadDir = process.env.UPLOAD_DIR || "./uploads";
 
-app.use("/uploads", express.static(path.resolve(uploadDir)));
 const PORT = process.env.PORT || 5000;
+
+// Upload directory
+const uploadDir = path.resolve(
+  process.env.UPLOAD_DIR || './uploads'
+);
 
 // Enable CORS
 app.use(cors());
@@ -23,8 +26,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static upload directory
-const uploadDir = path.resolve(process.env.UPLOAD_DIR || './uploads');
+// Serve uploaded images
 app.use('/uploads', express.static(uploadDir));
 
 // API Routes
@@ -35,7 +37,10 @@ app.use('/api/notifications', notificationRoutes);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date() });
+  res.json({
+    status: 'healthy',
+    timestamp: new Date()
+  });
 });
 
 // Root handler
@@ -43,7 +48,7 @@ app.get('/', (req, res) => {
   res.send('Smart Road Damage Reporting API is running.');
 });
 
-// Error handling middleware (must be registered last)
+// Error handling middleware
 app.use(errorHandler);
 
 // Start server
