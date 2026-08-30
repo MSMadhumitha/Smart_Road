@@ -181,7 +181,13 @@ const MyReports = () => {
               {/* Image Preview */}
               <div className="relative h-48 overflow-hidden bg-slate-950">
                 <img
-                  src={`${backendBase}${report.imageUrl ? report.imageUrl.split(',')[0] : ''}`}
+                  src={
+                    report.imageUrl
+                      ? report.imageUrl.startsWith('data:') || report.imageUrl.startsWith('http')
+                        ? report.imageUrl.split(',')[0]
+                        : `${backendBase}${report.imageUrl.split(',')[0]}`
+                      : ''
+                  }
                   alt={report.damageType}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />

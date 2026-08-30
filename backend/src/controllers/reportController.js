@@ -46,7 +46,27 @@ const createReport = async (req, res, next) => {
     // 2. Perform AI Gemini Analysis
     const aiResult = await analyzeImage(req.file.path, user_notes);
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // Convert optimized image to base64 and clean up temporary file
+    let imageUrl = '';
+    try {
+      const fs = require('fs');
+      if (req.file && req.file.path) {
+        const imageBuffer = fs.readFileSync(req.file.path);
+        const base64Data = imageBuffer.toString('base64');
+        imageUrl = `data:image/jpeg;base64,${base64Data}`;
+        
+        // Clean up the temporary file from the local disk asynchronously
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.error('Failed to delete temporary upload file:', err.message);
+        });
+      } else {
+        imageUrl = `/uploads/${req.file.filename}`;
+      }
+    } catch (err) {
+      console.error('Failed to convert image to base64:', err.message);
+      // Fallback to local path if base64 conversion fails
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
 
     // 3. Write to Database transactionally
     const result = await prisma.$transaction(async (tx) => {
@@ -236,7 +256,29 @@ const updateReport = async (req, res, next) => {
 
     // Handle multiple uploaded images
     if (req.processedFiles && req.processedFiles.length > 0) {
-      const newUrls = req.processedFiles.map(f => f.imageUrl).join(',');
+      const fs = require('fs');
+      const base64Urls = [];
+      for (const file of req.processedFiles) {
+        try {
+          if (file.path) {
+            const imageBuffer = fs.readFileSync(file.path);
+            const base64Data = imageBuffer.toString('base64');
+            base64Urls.push(`data:image/jpeg;base64,${base64Data}`);
+            
+            // Clean up the temporary file from the local disk asynchronously
+            fs.unlink(file.path, (err) => {
+              if (err) console.error('Failed to delete temporary update file:', err.message);
+            });
+          } else {
+            base64Urls.push(file.imageUrl);
+          }
+        } catch (err) {
+          console.error('Failed to convert update image to base64:', err.message);
+          // Fallback to local path if base64 conversion fails
+          base64Urls.push(file.imageUrl);
+        }
+      }
+      const newUrls = base64Urls.join(',');
       dataToUpdate.imageUrl = report.imageUrl ? `${report.imageUrl},${newUrls}` : newUrls;
     }
 

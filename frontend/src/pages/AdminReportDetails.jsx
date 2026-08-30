@@ -331,7 +331,7 @@ const AdminReportDetails = () => {
               {report.imageUrl && report.imageUrl.split(',').map((url, idx) => (
                 <div key={idx} className="rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-inner">
                   <img
-                    src={`${backendBase}${url}`}
+                    src={url.startsWith('data:') || url.startsWith('http') ? url : `${backendBase}${url}`}
                     alt={`Damage proof ${idx + 1}`}
                     className="w-full object-cover max-h-72 hover:scale-[1.02] transition-transform duration-300"
                   />

@@ -57,8 +57,8 @@ const ReportDetails = () => {
 
     const url = imageUrl.trim();
 
-    // If backend already returned a complete URL
-    if (url.startsWith('http://') || url.startsWith('https://')) {
+    // If backend already returned a complete URL or a Base64 data URL
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
       return url;
     }
 

@@ -20,7 +20,8 @@ async function main() {
         id: true,
         userId: true,
         status: true,
-        damageType: true
+        damageType: true,
+        imageUrl: true
       }
     });
 

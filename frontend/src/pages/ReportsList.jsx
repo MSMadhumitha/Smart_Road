@@ -313,7 +313,13 @@ const ReportsList = () => {
                     <td className="py-3 px-4">
                       <div className="h-11 w-11 rounded-lg overflow-hidden border border-slate-800 bg-slate-900 shrink-0">
                         <img
-                          src={`${backendBase}${report.imageUrl ? report.imageUrl.split(',')[0] : ''}`}
+                          src={
+                            report.imageUrl
+                              ? report.imageUrl.startsWith('data:') || report.imageUrl.startsWith('http')
+                                ? report.imageUrl.split(',')[0]
+                                : `${backendBase}${report.imageUrl.split(',')[0]}`
+                              : ''
+                          }
                           alt="preview"
                           className="h-full w-full object-cover"
                         />
